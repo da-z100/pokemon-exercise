@@ -21,11 +21,19 @@ class ListView extends Component {
     this.fetchPokemon();
   }
 
-  async fetchPokemon() {
+  shouldComponentUpdate(nextProps, nextState){
+      if (this.state.search !== nextState.search) {
+        return false;
+      }
+    return true;
+  }
+
+  async fetchPokemon(init = true) {
     // your code here
     const { limit, offset, search } = this.state;
     const response = await fetch(`http://localhost:8080/pokemon?limit=${limit}&offset=${offset}&search=${search}`);
     const result = await response.json();
+    console.log(result);
     this.setState({
       pokemon: result
     })
@@ -34,11 +42,14 @@ class ListView extends Component {
   debouncedSearch(func, wait) {
     // your code here
     let timer;
+    const that = this;
 
-    return (...args) => {
+    return function (e) {
+      that.setState({ search: e.target.value });
+
       const runAfterTime = () => {
         timer = null;
-        func(...args)
+        func(e)
       }
 
       clearTimeout(timer);
@@ -46,9 +57,9 @@ class ListView extends Component {
     }
   }
 
-  onChange() {
-    console.log(this.state)
+  onChange(e) {
     // your code here
+    this.fetchPokemon();
   }
 
   render() {
