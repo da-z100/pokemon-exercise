@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Flexbox from 'flexbox-react';
-import { ListItemDisplay, ListItemTitle, LoadingBar } from './styled';
+import { ListItemDisplay, ListItemTitle, LoadingBar, SearchInput } from './styled';
 
 class ListView extends Component {
   loadingElementRef = null;
@@ -78,7 +78,10 @@ class ListView extends Component {
     const that = this;
 
     return function (e) {
-      that.setState({ search: e.target.value });
+      that.setState({ 
+        search: e.target.value,
+        isFetchable: true
+      });
 
       const runAfterTime = () => {
         timer = null;
@@ -100,7 +103,7 @@ class ListView extends Component {
     return (
       <Flexbox flexDirection='column' alignItems='center' width='100vw'>
         <Flexbox width='250px' marginTop='13px'>
-          <input onChange={this.debouncedSearch(this.onChange, 250)} placeholder="Search for a Pokémon!"/>
+          <SearchInput onChange={this.debouncedSearch(this.onChange, 250)} placeholder="Search for a Pokémon!"/>
         </Flexbox>
         <Flexbox marginTop='15px' padding='0px 10vw'>
           <Flexbox flexWrap='wrap'>
@@ -108,8 +111,8 @@ class ListView extends Component {
                 return (
                   <ListItemDisplay key={entry._id}>
                     <Flexbox key={entry.name} flexDirection='column'>
-                      <ListItemTitle>{entry.name}</ListItemTitle>
                       <img src={entry.image} />
+                      <ListItemTitle>{entry.name}</ListItemTitle>
                     </Flexbox>
                   </ListItemDisplay>
                 )
