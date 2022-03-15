@@ -31,8 +31,6 @@ export const ListItemDisplay = styled.div`
     transition: all 0.25s linear;
     width: 17vw;
     margin: 5px;
-    display: flex;
-    justify-content: center;
 
     &:hover{
         box-shadow: 0px 0px 5px #0077c5;
@@ -50,3 +48,69 @@ export const LoadingBar = styled.div`
     width: 100%;
     height: 30px;
 `;
+
+export const SavedText = styled.p`
+    font-size: 18px;
+    line-height: 40px;
+    font-weight: bold;
+    color: #367AF6;
+    vertical-align: middle;
+    margin: 0;
+    height: 40px;
+`;
+
+export const SaveButton = styled.button`
+    width: 100px;
+    background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%);
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+`;
+
+export const RemoveButton = styled.button`
+    width: 100px;
+    background-color: #EA4C89;
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+`
