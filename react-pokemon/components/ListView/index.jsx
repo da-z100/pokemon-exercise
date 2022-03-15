@@ -8,7 +8,8 @@ class ListView extends Component {
     this.state = {
       pokemon: [],
       offset: 0,
-      limit: 20
+      limit: 20,
+      search: ""
     };
 
     this.fetchPokemon = this.fetchPokemon.bind(this);
@@ -22,17 +23,27 @@ class ListView extends Component {
 
   async fetchPokemon() {
     // your code here
-    const { limit, offset } = this.state;
-    const response = await fetch(`http://localhost:8080/pokemon?limit=${limit}&offset=${offset}`);
+    const { limit, offset, search } = this.state;
+    const response = await fetch(`http://localhost:8080/pokemon?limit=${limit}&offset=${offset}&search=${search}`);
     const result = await response.json();
     this.setState({
       pokemon: result
     })
   }
 
-  debouncedSearch() {
+  debouncedSearch(func, wait) {
     // your code here
-    return this.onChange;
+    let timer;
+
+    return (...args) => {
+      const runAfterTime = () => {
+        timer = null;
+        func(...args)
+      }
+
+      clearTimeout(timer);
+      timer = setTimeout(runAfterTime, wait)
+    }
   }
 
   onChange() {
