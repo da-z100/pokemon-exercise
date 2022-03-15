@@ -18,3 +18,8 @@ export const ListItemTitle = styled.h2`
     font-size: 16px;
     font-weight: normal;
 `;
+
+export const LoadingBar = styled.div`
+    width: 100%;
+    height: 30px;
+`;

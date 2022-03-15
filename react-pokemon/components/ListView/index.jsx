@@ -1,24 +1,42 @@
 import React, { Component } from 'react';
 import Flexbox from 'flexbox-react';
-import { ListItemDisplay, ListItemTitle } from './styled';
+import { ListItemDisplay, ListItemTitle, LoadingBar } from './styled';
 
 class ListView extends Component {
+  loadingElementRef = null;
+
   constructor(props) {
     super(props);
     this.state = {
       pokemon: [],
       offset: 0,
       limit: 20,
-      search: ""
+      search: "",
+      isLoading: false,
+      isFetchable: true
     };
 
     this.fetchPokemon = this.fetchPokemon.bind(this);
     this.debouncedSearch = this.debouncedSearch.bind(this);
     this.onChange = this.onChange.bind(this);
+
+    this.observer = React.createRef();
   }
 
   componentDidMount() {
     this.fetchPokemon();
+
+    this.loadingElementRef = (node) => {
+      if (this.observer.current) this.observer.current.disconnect();
+      this.observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          if (this.state.isLoading) return;
+
+          this.fetchPokemon(false);
+        }
+      });
+      if (node) this.observer.current.observe(node);
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -30,13 +48,28 @@ class ListView extends Component {
 
   async fetchPokemon(init = true) {
     // your code here
-    const { limit, offset, search } = this.state;
-    const response = await fetch(`http://localhost:8080/pokemon?limit=${limit}&offset=${offset}&search=${search}`);
-    const result = await response.json();
-    console.log(result);
-    this.setState({
-      pokemon: result
-    })
+    try {
+      const { limit, offset, search, pokemon, isFetchable } = this.state;
+
+      if (!isFetchable) return false;
+
+      this.setState({
+        isLoading: true
+      });
+
+      const offsetVal = init ? offset : this.state.pokemon.length;
+
+      const response = await fetch(`http://localhost:8080/pokemon?limit=${limit}&offset=${offsetVal}&search=${search}`);
+      const result = await response.json();
+  
+      this.setState({
+        pokemon: init ? result : [...pokemon, ...result],
+        isFetchable: result.length === limit,
+        isLoading: false
+      })
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   debouncedSearch(func, wait) {
@@ -63,7 +96,7 @@ class ListView extends Component {
   }
 
   render() {
-    const { pokemon } = this.state;
+    const { pokemon, isFetchable } = this.state;
     return (
       <Flexbox flexDirection='column' alignItems='center' width='100vw'>
         <Flexbox width='250px' marginTop='13px'>
@@ -84,6 +117,7 @@ class ListView extends Component {
             }
           </Flexbox>
         </Flexbox>
+        {isFetchable && <LoadingBar ref={this.loadingElementRef} />}
       </Flexbox>
     )
   }
