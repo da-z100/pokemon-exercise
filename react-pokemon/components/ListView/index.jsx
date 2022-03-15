@@ -16,15 +16,27 @@ class ListView extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  fetchPokemon() {
+  componentDidMount() {
+    this.fetchPokemon();
+  }
+
+  async fetchPokemon() {
     // your code here
+    const { limit, offset } = this.state;
+    const response = await fetch(`http://localhost:8080/pokemon?limit=${limit}&offset=${offset}`);
+    const result = await response.json();
+    this.setState({
+      pokemon: result
+    })
   }
 
   debouncedSearch() {
     // your code here
+    return this.onChange;
   }
 
   onChange() {
+    console.log(this.state)
     // your code here
   }
 
@@ -39,7 +51,7 @@ class ListView extends Component {
           <Flexbox flexWrap='wrap'>
           {pokemon.map(entry => {
                 return (
-                  <ListItemDisplay>
+                  <ListItemDisplay key={entry._id}>
                     <Flexbox key={entry.name} flexDirection='column'>
                       <ListItemTitle>{entry.name}</ListItemTitle>
                       <img src={entry.image} />
